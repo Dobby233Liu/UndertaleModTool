@@ -31,6 +31,7 @@ namespace UndertaleModTool
             {
                 File.WriteAllText(Path.Combine(GetExecutableDirectory(), "crash.txt"), e.ToString());
                 MessageBox.Show(e.ToString());
+                throw;
             }
         }
     }
