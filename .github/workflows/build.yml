@@ -2,13 +2,17 @@ name: Build tool
 
 on:
   push:
+    # ???
     branches: [ master ]
   workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        release-type: [win-x86, win-x64, win-arm]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,32 +24,14 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build UndertaleModTool --no-restore
-    - name: Publish Windows x86
-      run: dotnet publish UndertaleModTool -c Release -r win-x86 --self-contained false -p:PublishSingleFile=true --output win_x86
-    - name: Publish Windows x64
-      run: dotnet publish UndertaleModTool -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true --output win_x64
-    - name: Publish Windows ARM
-      run: dotnet publish UndertaleModTool -c Release -r win-arm --self-contained false -p:PublishSingleFile=true --output win_arm
-    - name: Copy external files
+    - name: Publish
+      run: dotnet publish UndertaleModTool -c Release -r ${{ matrix.release-type }} --self-contained false -p:PublishSingleFile=true --output output
+    - name: Copy documents
       run: |
-        Copy-Item "README.md" -Destination "./win_x86/"
-        Copy-Item "README.md" -Destination "./win_x64/"
-        Copy-Item "README.md" -Destination "./win_arm/"
-        Copy-Item "SCRIPTS.md" -Destination "./win_x86/"
-        Copy-Item "SCRIPTS.md" -Destination "./win_x64/"
-        Copy-Item "SCRIPTS.md" -Destination "./win_arm/"
-    - name: Archive win_x86
+        Copy-Item "README.md" -Destination "./output/"
+        Copy-Item "SCRIPTS.md" -Destination "./output/"
+    - name: Upload build
       uses: actions/upload-artifact@v2
       with:
-        name: win_x86
-        path: win_x86
-    - name: Archive win_x64
-      uses: actions/upload-artifact@v2
-      with:
-        name: win_x64
-        path: win_x64
-    - name: Archive win_arm
-      uses: actions/upload-artifact@v2
-      with:
-        name: win_arm
-        path: win_arm
+        name: ${{ matrix.release-type }}
+        path: output
