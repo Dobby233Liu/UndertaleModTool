@@ -254,15 +254,27 @@ public class UndertaleFont : UndertaleNamedResource, IDisposable
         Italic = reader.ReadBoolean();
         RangeStart = reader.ReadUInt16();
         Charset = reader.ReadByte();
-        AntiAliasing = reader.ReadByte();
-        RangeEnd = reader.ReadUInt32();
+        if (true /* TRANSLATALE */)
+        {
+            RangeEnd = reader.ReadUInt32();
+            AntiAliasing = reader.ReadByte();
+        }
+        else
+        {
+            AntiAliasing = reader.ReadByte();
+            RangeEnd = reader.ReadUInt32();
+        }
         Texture = reader.ReadUndertaleObjectPointer<UndertaleTexturePageItem>();
         ScaleX = reader.ReadSingle();
         ScaleY = reader.ReadSingle();
-        if (reader.undertaleData.GeneralInfo?.BytecodeVersion >= 17)
-            AscenderOffset = reader.ReadInt32();
-        if (reader.undertaleData.GMS2022_2)
-            Ascender = reader.ReadUInt32();
+        if (false /* TRANSLATALE */)
+        {
+            // The WinPack tool that TranslaTale uses doesn't write AscenderOffset under bytecode version 17
+            if (reader.undertaleData.GeneralInfo?.BytecodeVersion >= 17)
+                AscenderOffset = reader.ReadInt32();
+            if (reader.undertaleData.GMS2022_2)
+                Ascender = reader.ReadUInt32();
+        }
         Glyphs = reader.ReadUndertaleObject<UndertalePointerList<Glyph>>();
     }
 
