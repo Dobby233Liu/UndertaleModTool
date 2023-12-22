@@ -1253,8 +1253,8 @@ public class UndertaleRoom : UndertaleNamedResource, INotifyPropertyChanged, IDi
         /// <inheritdoc />
         public void Serialize(UndertaleWriter writer)
         {
-            writer.Write(X);
-            writer.Write(Y);
+            writer.Write(X - (int)((ScaleX == -1 ? ScaleX : 0) * Width));
+            writer.Write(Y - (int)((ScaleY == -1 ? ScaleY : 0) * Height));
             if (spriteMode != writer.undertaleData.IsGameMaker2())
                 throw new Exception("Unsupported in GMS" + writer.undertaleData.GeneralInfo.Major);
             if (spriteMode)
@@ -1291,6 +1291,9 @@ public class UndertaleRoom : UndertaleNamedResource, INotifyPropertyChanged, IDi
             ScaleX = reader.ReadSingle();
             ScaleY = reader.ReadSingle();
             Color = reader.ReadUInt32();
+
+            X += (int)((ScaleX == -1 ? ScaleX : 0) * Width);
+            Y += (int)((ScaleY == -1 ? ScaleY : 0) * Height);
         }
 
         /// <inheritdoc />
