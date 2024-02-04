@@ -585,7 +585,7 @@ namespace UndertaleModLib
 
             base.UnserializeChunk(reader);
 
-            Padding = reader.ReadBytes(512);
+            Padding = reader.ReadBytes(388);
         }
 
         internal override uint UnserializeObjectCount(UndertaleReader reader)
