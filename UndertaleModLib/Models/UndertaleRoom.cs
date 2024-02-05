@@ -896,7 +896,18 @@ public class UndertaleRoom : UndertaleNamedResource, INotifyPropertyChanged, IDi
             BorderY = reader.ReadUInt32();
             SpeedX = reader.ReadInt32();
             SpeedY = reader.ReadInt32();
-            _objectId = reader.ReadUndertaleObject<UndertaleResourceById<UndertaleGameObject, UndertaleChunkOBJT>>();
+            _objectId = new UndertaleResourceById<UndertaleGameObject, UndertaleChunkOBJT>();
+            var obj = reader.ReadInt32();
+            if (obj == -100) // Can happen in bytecode 12??
+            {
+                _objectId.UnserializeById(reader, -1);
+            }
+            else
+            {
+                if (obj < 0)
+                    throw new Exception("Invalid value for parent - should be -100 or object id, got " + parent);
+                _objectId.UnserializeById(reader, obj);
+            }
         }
 
         /// <inheritdoc/>
