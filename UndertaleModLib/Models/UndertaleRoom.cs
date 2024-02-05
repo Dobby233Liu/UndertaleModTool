@@ -905,7 +905,7 @@ public class UndertaleRoom : UndertaleNamedResource, INotifyPropertyChanged, IDi
             else
             {
                 if (obj < 0)
-                    throw new Exception("Invalid value for parent - should be -100 or object id, got " + parent);
+                    throw new Exception("Invalid value for parent - should be -100 or object id, got " + obj);
                 _objectId.UnserializeById(reader, obj);
             }
         }
